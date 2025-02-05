@@ -33,13 +33,14 @@ class VAE_AttentionBlock(nn.Module):
         x = x.view(n, c, h, w)
 
         x += residue
+        return x
 
 
-class VAE_ResidualBlock(nn.module):
+class VAE_ResidualBlock(nn.Module):
 
     def __init__(self, in_channels, out_channels):
         super().__init__()
-        self.groupnorm_1 = nn.GroupNorm(32, in_channels, kernel_size=3, padding=1)
+        self.groupnorm_1 = nn.GroupNorm(32, in_channels)
         self.conv_1 = nn.Conv2d(in_channels, out_channels, kernel_size=3, padding=1)
 
         self.groupnorm_2 = nn.GroupNorm(32, out_channels)
@@ -127,7 +128,7 @@ class VAE_Decoder(nn.Sequential):
 
             nn.SiLU(),
 
-            #(Batch_size ,128, Hieght ,Width) -> ( Batch_size , 3 , Height ,Width)
+            #(Batch_size ,128, Height ,Width) -> ( Batch_size , 3 , Height ,Width)
             nn.Conv2d(128, 3 , kernel_size = 3, padding =1)
 
         )
